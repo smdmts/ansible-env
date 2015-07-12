@@ -1,0 +1,21 @@
+---
+
+- name: Install devel
+  yum: name=curl-devel,expat-devel,gettext-devel,openssl-devel,zlib-devel state=latest
+
+- name: Install compiler
+  yum: name=gcc,perl-ExtUtils-MakeMaker state=latest
+
+- name: Remove git
+  yum: name=git state=absent
+
+- name: Git Download
+  get_url: url="{{git_url}}" dest={{dist_src}}
+
+- name: Git Make
+  shell: >-
+    cd {{dist_src}} &&
+    tar -zxf git-{{git_version}}.tar.gz  &&
+    cd git-{{git_version}} &&
+    make prefix=/usr all &&
+    make prefix=/usr install

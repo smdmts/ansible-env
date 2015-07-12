@@ -1,0 +1,16 @@
+---
+- name: Register Yum Fish
+  shell: >-
+    cd /etc/yum.repos.d/ &&
+    wget http://download.opensuse.org/repositories/shells:fish:release:2/CentOS_7/shells:fish:release:2.repo
+
+- name: Install Fish
+  yum: name=fish state=latest
+
+- name: Install-oh-my-fish
+  shell: >-
+    curl -L https://github.com/oh-my-fish/oh-my-fish/raw/master/tools/install.fish | fish
+  sudo: no
+  ignore_errors: True
+  register: exit
+  failed_when: exit.rc not in [0, 1]

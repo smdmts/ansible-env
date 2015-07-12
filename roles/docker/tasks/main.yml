@@ -1,0 +1,28 @@
+---
+
+- name: Install docker package
+  yum: name={{ item }} state=present
+  with_items:
+    - docker-io
+
+- name: Create Group Docker
+  group: name=docker state=present
+
+- name: Group add vagrant user
+  user:
+    name: vagrant
+    append: yes
+    groups: "docker"
+
+- name: Enable docker service
+  service: name=docker state=started enabled=yes
+
+- name: Create Dockerfile
+  template:
+    src: "Dockerfile"
+    dest: "/home/vagrant/Dockerfile"
+  sudo: no
+
+- name: Build Docker image
+  command: docker build -t {{ build_image }} .
+  sudo: no
